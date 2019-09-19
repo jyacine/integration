@@ -1,0 +1,44 @@
+# TortoiseGit
+.tgitconfig
+
+# Maven
+.m2/
+target/
+*.versionsBackup
+
+# Vagrant
+.vagrant/
+
+# GNU/Linux
+*~
+~*
+
+# Mac OS X
+.DS_Store
+
+# IntelliJ
+.idea/
+*.iml
+
+# Eclipse
+.classpath
+.project
+.settings/
+.metadata/
+.recommenders/
+
+# Atom
+.tags
+
+# Execution
+*.pid
+*.log
+
+# Gradle
+.gradle
+
+# Node
+node_modules
+
+# Others
+*.kpi

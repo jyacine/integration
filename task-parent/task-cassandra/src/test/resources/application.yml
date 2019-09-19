@@ -1,0 +1,21 @@
+# Cassandra
+cassandra:
+  contactpoints: localhost
+  port: 19042
+  keyspace: packet
+  basePackages: com.oculus.task2
+    
+# Logger configuration
+logging:
+  pattern:
+    console: "%d %-5level %logger : %msg%n"
+  level:
+    org.springframework: INFO
+    org.hibernate: INFO
+    
+# Application
+oculus:
+  task:
+    directory: @project.build.directory@@file.separator@integ
+  task2:
+    dircontent: @project.build.directory@@file.separator@content

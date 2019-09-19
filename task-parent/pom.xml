@@ -1,0 +1,219 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.oculus.task</groupId>
+	<artifactId>task-parent</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<name>Parent Technical Task</name>
+  
+  	<parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.1.5.RELEASE</version>
+    </parent>
+  
+  	<prerequisites>
+        <maven>3.0.0</maven>
+    </prerequisites>
+
+    <properties>
+        <!-- Project settings -->
+        <java.version>1.8</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        
+        <pkts.version>3.0.0</pkts.version>
+        <lombok.version>1.16.20</lombok.version>
+        <postgres.version>9.4.1212</postgres.version>
+        <swagger.version>2.8.0</swagger.version>
+	</properties>
+	
+	<dependencyManagement>
+        <dependencies>
+			<!-- PostgreSQL -->
+	        <dependency>
+	            <groupId>org.postgresql</groupId>
+	            <artifactId>postgresql</artifactId>
+	            <version>${postgres.version}</version>
+	        </dependency>
+	         <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            
+            <!-- IO -->
+            <dependency>
+			    <groupId>commons-io</groupId>
+			    <artifactId>commons-io</artifactId>
+			    <version>2.5</version>
+			</dependency>
+            
+            <!-- PCAP -->
+            <dependency>
+	            <groupId>io.pkts</groupId>
+	            <artifactId>pkts-core</artifactId>
+	            <version>${pkts.version}</version>
+	        </dependency>
+	
+	        <dependency>
+	            <groupId>io.pkts</groupId>
+	            <artifactId>pkts-streams</artifactId>
+	            <version>${pkts.version}</version>
+	        </dependency>
+            
+            <!-- swagger -->
+            <dependency>
+			    <groupId>io.springfox</groupId>
+			    <artifactId>springfox-swagger2</artifactId>
+			    <version>${swagger.version}</version>
+			</dependency>
+			
+			
+			<dependency>
+			    <groupId>io.springfox</groupId>
+			    <artifactId>springfox-swagger-ui</artifactId>
+			    <version>${swagger.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	
+	<profiles>
+		<profile>
+			<id>default</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
+		<profile>
+			<id>docker.test</id>
+			<activation>
+				<file>
+					<exists>${basedir}/docker/docker.env</exists>
+				</file>
+			</activation>
+			<build>
+                <plugins>
+                	<plugin>
+				        <groupId>org.apache.maven.plugins</groupId>
+				        <artifactId>maven-surefire-plugin</artifactId>
+				        <configuration>
+				          <skipTests>true</skipTests>
+				        </configuration>
+					</plugin>
+                	<plugin>
+	                	<groupId>org.apache.maven.plugins</groupId>
+					    <artifactId>maven-failsafe-plugin</artifactId>
+				    </plugin>
+                    <plugin>
+					    <groupId>io.fabric8</groupId>
+					    <artifactId>docker-maven-plugin</artifactId>
+				    </plugin>
+                </plugins>
+            </build>
+		</profile>
+		
+	</profiles>
+	
+	<build>
+		<testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+                <filtering>true</filtering>
+            </testResource>
+        </testResources>
+		<pluginManagement>
+	        <plugins>
+	        	<plugin>
+                	<groupId>org.apache.maven.plugins</groupId>
+				    <artifactId>maven-failsafe-plugin</artifactId>
+				    <executions>
+				        <execution>
+				            <goals>
+				                <goal>integration-test</goal>
+				                <goal>verify</goal>
+				            </goals>
+				        </execution>
+				    </executions>
+			    </plugin>
+	        	<plugin>
+				    <groupId>io.fabric8</groupId>
+				    <artifactId>docker-maven-plugin</artifactId>
+				    <version>0.30.0</version>
+				    <executions>
+				        <execution>
+				            <id>prepare-it-database</id>
+				            <!-- phase>process-test-classes</phase -->
+				            <goals>
+				                <goal>start</goal>
+				            </goals>
+				            <configuration>
+				                <images>
+				                    <image>
+				                        <name>${image.name}</name>
+				                        <alias>${container.alias}</alias>
+				                        <run>
+				                        	<envPropertyFile>${basedir}/docker/docker.env</envPropertyFile>
+				                        	<exposedPropertyKey>${container.env}</exposedPropertyKey>
+				                            <ports>
+				                                <port>${host.port}:${container.port}</port>
+				                            </ports>
+				                            <wait>
+				                                <!--log>(?s)database system is ready to accept connections.*database system is ready to accept connections</log-->
+				                                <time>${waiting.time}</time>
+				                            </wait>
+				                        </run>
+				                    </image>
+				                </images>
+				            </configuration>
+				        </execution>
+				        <execution>
+				            <id>remove-it-database</id>
+				            <!-- phase>prepare-package</phase-->
+				            <goals>
+				                <goal>stop</goal>
+				            </goals>
+				        </execution>
+				    </executions>
+				</plugin>
+	            <plugin>
+	                <groupId>org.apache.maven.plugins</groupId>
+	                <artifactId>maven-surefire-plugin</artifactId>
+	            </plugin>
+	        </plugins>
+        </pluginManagement>
+        <plugins>
+        	<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+	        </plugin>
+	        <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <configuration>
+                    <delimiters>
+                        <delimiter>@</delimiter>
+                    </delimiters>
+                    <useDefaultDelimiters>false</useDefaultDelimiters>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <addResources>false</addResources>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+	
+  
+	<modules>
+		<module>task-cassandra</module>
+		<module>task-common</module>
+		<module>task-postgres</module>
+	</modules>
+</project>

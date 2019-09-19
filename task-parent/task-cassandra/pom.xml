@@ -1,0 +1,77 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.oculus.task</groupId>
+    <artifactId>task-parent</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <artifactId>task-cassandra</artifactId>
+  
+  <properties>
+		<image.name>cassandra:3.0</image.name>
+		<container.alias>cassandra</container.alias>
+		<host.port>19042</host.port>
+		<container.port>9042</container.port>
+		<waiting.time>20000</waiting.time>
+	</properties>
+  
+  <dependencies>
+  
+  	<!-- Cassandra -->
+  	<dependency>
+	  <groupId>org.springframework.boot</groupId>
+	  <artifactId>spring-boot-starter-data-cassandra</artifactId>
+	</dependency>
+  	<!-- Rest COntroller -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+  	
+  		<!-- PCAP -->
+        <dependency>
+            <groupId>io.pkts</groupId>
+            <artifactId>pkts-core</artifactId>
+        </dependency>
+
+		<!-- file listener -->
+        <dependency>
+		    <groupId>commons-io</groupId>
+		    <artifactId>commons-io</artifactId>
+		</dependency>
+        <dependency>
+            <groupId>io.pkts</groupId>
+            <artifactId>pkts-streams</artifactId>
+        </dependency>
+  	
+  		 <!-- Lombok -->
+        <dependency>
+             <groupId>org.projectlombok</groupId>
+             <artifactId>lombok</artifactId>
+         </dependency>
+
+		<!-- Swagger -->
+		 <dependency>
+		    <groupId>io.springfox</groupId>
+		    <artifactId>springfox-swagger2</artifactId>
+		</dependency>
+		
+		<dependency>
+		    <groupId>io.springfox</groupId>
+		    <artifactId>springfox-swagger-ui</artifactId>
+		</dependency>
+
+		<!-- Test -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+        	<groupId>com.oculus.task</groupId>
+        	<artifactId>task-common</artifactId>
+        	<version>${project.version}</version>
+        </dependency>
+  </dependencies>
+</project>

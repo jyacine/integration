@@ -1,0 +1,32 @@
+# Spring Boot configuration
+server:
+  port: 8200
+
+info:
+  version: '@project.version@'  
+spring:
+  application:
+    name: svc-packet
+
+# Cassandra
+cassandra:
+  contactpoints: 127.0.0.1
+  port: 19042
+  keyspace: packet
+  basePackages: com.oculus.task2
+    
+# Logger configuration
+logging:
+  pattern:
+    console: "%d %-5level %logger : %msg%n"
+  level:
+    org.springframework: INFO
+    org.hibernate: INFO
+    
+# Application
+oculus:
+  task:
+    directory: d:\\work\\task2
+  task2:
+    dircontent: d:\\work\\task2\\content
+  

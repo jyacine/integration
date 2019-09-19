@@ -1,0 +1,49 @@
+# Spring Boot configuration
+server:
+  port: 8300
+
+info:
+  version: '@project.version@'  
+
+spring:
+  application:
+    name: svc-report
+  # Database
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/cell_db
+    username: postgres
+    password: postgres
+    hikari:
+      connectionTimeout: 20000
+      maximumPoolSize: 10
+# JPA properties
+  jpa:
+    hibernate:
+      ddl-auto: create
+    generate-ddl: false
+    show-sql: false
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    
+# Logger configuration
+logging:
+  pattern:
+    console: "%d %-5level %logger : %msg%n"
+  level:
+    org.springframework: INFO
+    org.hibernate: INFO
+    
+# Application
+oculus:
+  task:
+    directory: d:\\work\\task1
+  task1:
+    filter:
+      dateformat: yyyy-MM-dd
+      datebegin: 1970-01-15
+      dateend: 1980-01-16
+      radio: GSM
+      radius: 3000
+      lonRef: 10.345754
+      latRef: 55.35097
