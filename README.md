@@ -2,8 +2,14 @@
 
 ![N|Solid](workflow.png)
 
-The file integration follow the process above. The project [common-task](https://github.com/jyacine/integration/tree/master/task-parent/task-common) define this process.
-You can use this project for every king of integration process. You can do it by implementing the services bellow :
+The file integration follow the process below. The project [common-task](https://github.com/jyacine/integration/tree/master/task-parent/task-common) define this process.
+
+The integration can handle multiple files at the same time. The number of concurrent files can be configured (see configuration part).
+**The filename is considered as unique. So when a second file with the same name is processed, a DELETE/ADD is fired.**
+
+You can use this project for every king of integration process. You can do it by implementing the services below :
+
+## Implementation (How to) 
 **ReportService**
 This service have the goal to add the information about the file integrated
 ```java
@@ -26,7 +32,7 @@ You can then extends IntegrationFileListener by defining the type of :
 public class MyIntegrationFileListener<ReportId,ReportEntity> extends IntegrationFileListener {
 }
 ```
-# Configuration
+## Configuration
 There is 4 steps for integration. Each step have its own directory :
 * **input**: where the file is created
 * **inprogress**: where the file is been processing
@@ -38,7 +44,13 @@ oculus:
   task:
     directory: d:\\work\\task
 ```
-
+The number of files to process at the same time can be configured :
+```yml
+oculus:
+  task:
+    concurrent:
+        files: 4
+```
 # Build 
 You can build the entire project from [task-parent](https://github.com/jyacine/integration/tree/master/task-parent/) by 
 ```sh
