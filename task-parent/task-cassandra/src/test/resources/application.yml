@@ -15,6 +15,9 @@ logging:
     
 # Application
 oculus:
+  #test
+  test:
+    testFile: @project.basedir@@file.separator@src@file.separator@test@file.separator@resources@file.separator@test.pcap
   task:
     directory: @project.build.directory@@file.separator@integ
   task2:

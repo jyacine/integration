@@ -3,6 +3,9 @@ package com.oculus.task2.controler;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,10 +30,18 @@ public class ReportController {
 	PacketReportService reportService;
 	
 	@ApiOperation(value = "Get packet by fileName")
-	@GetMapping("/packets/{fileName}")
-	public List<PacketEntity> getPacketByFilename(@ApiParam("fileName") @PathVariable("fileName") 
-					String fileName) {
-		return packetService.findByKeyFileName(fileName);
+	@GetMapping("/packets/{fileName}/{offset}/{size}")
+	public List<PacketEntity> getPacketByFilename(
+					@ApiParam("fileName") @PathVariable("fileName") 
+					String fileName,
+					@ApiParam("list size") @PathVariable("size")
+					int size) {
+		Pageable pageable = PageRequest.of(0, size);
+		Slice<PacketEntity> slice = packetService.findByKeyFileName(fileName,pageable);
+		if(slice != null){
+			return slice.getContent();
+		}
+		return null;
 	}
 	
 	@ApiOperation(value = "Get report by fileName")

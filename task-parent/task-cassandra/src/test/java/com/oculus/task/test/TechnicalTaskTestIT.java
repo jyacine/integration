@@ -46,6 +46,9 @@ public class TechnicalTaskTestIT {
 	@Value("${oculus.task2.dircontent}")
     private String contentDirectory;
 	
+	@Value("${oculus.test.testFile}")
+    private String testFilePath;
+	
 	@Autowired
 	private ApplicationContext appContext;
 	
@@ -72,12 +75,11 @@ public class TechnicalTaskTestIT {
 		createFolders();
 		String fileName = "test.pcap";
 		File fileDest = new File(ConfigurationApp.INPUT_DIR + File.separator + fileName);
-		File fileSrc = new File(getClass().getResource("/"+fileName).getFile());
+		File fileSrc = new File(testFilePath);
 		
 		log.info("copy <{}> to <{}>",fileSrc.getAbsolutePath(),fileDest.getAbsolutePath());
 		FileUtils.copyFile(fileSrc, fileDest);
 
-		Thread.sleep(5000);
 		PacketReport report = waitUntilIntegrationFinish(fileName);
 		log.info("**********************************************************************************"); 
 		log.info("********************************* REPORT *****************************************");
@@ -110,7 +112,7 @@ public class TechnicalTaskTestIT {
 	 */
 	private PacketReport waitUntilIntegrationFinish(String fileName){
 		PacketReport report = reportService.findReportByFilename(fileName);
-		while(report.getStatus().equals(PacketReportService.STATUS_STARTED)){
+		while(report == null || report.getStatus().equals(PacketReportService.STATUS_STARTED)){
 			try {
 				Thread.sleep(5000);
 			} catch (InterruptedException e) {

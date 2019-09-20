@@ -8,6 +8,7 @@
   <artifactId>task-cassandra</artifactId>
   
   <properties>
+ 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<image.name>cassandra:3.0</image.name>
 		<container.alias>cassandra</container.alias>
 		<host.port>19042</host.port>
