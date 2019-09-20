@@ -27,6 +27,8 @@ logging:
 oculus:
   task:
     directory: d:\\work\\task2
+    concurrent:
+        files: 4
   task2:
     dircontent: d:\\work\\task2\\content
   

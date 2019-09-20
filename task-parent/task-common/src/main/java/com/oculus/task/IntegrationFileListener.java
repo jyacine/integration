@@ -18,6 +18,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import org.apache.commons.io.FileUtils;
@@ -26,6 +27,7 @@ import org.apache.commons.io.monitor.FileAlterationObserver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -35,8 +37,8 @@ public class IntegrationFileListener<I,E> implements FileAlterationListener {
 
 	private static final Logger log = LoggerFactory.getLogger(IntegrationFileListener.class);
 	
-	//Limit handling 4 files at the same time
-	ExecutorService executor = Executors.newFixedThreadPool(4);
+	//Limit handling files at the same time
+	ExecutorService executor;
 	
 	private List<Future<ProcessResult<I>>> listProcess = new ArrayList<>();
 	
@@ -45,6 +47,14 @@ public class IntegrationFileListener<I,E> implements FileAlterationListener {
 	
 	@Autowired
 	ReportService<I> reportService;
+	
+	@Value("${oculus.task.concurrent.files}")
+	private int thread_pool;
+	
+	@PostConstruct
+	private void init(){
+		executor = Executors.newFixedThreadPool(thread_pool);
+	}
 	
 	@PreDestroy
 	private void destroy(){

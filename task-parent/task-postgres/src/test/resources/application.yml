@@ -29,6 +29,8 @@ logging:
 oculus:
   task:
     directory: @project.build.directory@@file.separator@integ
+    concurrent:
+      files: 1
   task1:
     filter:
       dateformat: yyyy-MM-dd

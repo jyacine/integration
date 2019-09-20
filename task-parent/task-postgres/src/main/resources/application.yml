@@ -38,6 +38,8 @@ logging:
 oculus:
   task:
     directory: d:\\work\\task1
+    concurrent:
+      files: 4
   task1:
     filter:
       dateformat: yyyy-MM-dd

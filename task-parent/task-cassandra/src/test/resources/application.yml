@@ -20,5 +20,7 @@ oculus:
     testFile: @project.basedir@@file.separator@src@file.separator@test@file.separator@resources@file.separator@test.pcap
   task:
     directory: @project.build.directory@@file.separator@integ
+    concurrent:
+      files: 1
   task2:
     dircontent: @project.build.directory@@file.separator@content
