@@ -91,6 +91,10 @@
 		<profile>
 			<id>docker.test</id>
 			<activation>
+				<property>
+					<name>env</name>
+					<value>docker</value>
+				</property>
 				<file>
 					<exists>${basedir}/docker/docker.env</exists>
 				</file>

@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -58,7 +60,10 @@ public class PacketIntegrationService implements IntegrationService<ReportKey,Pa
 					 nbPakets.addPacket();
 					 HTMLParser parser = new HTMLParser(tcp.getPayload());
 					 UUID id = UUID.randomUUID();
-					 File fileBodyContent = parser.createFileFromBody(packetContentDirectory
+					 String contentPacketsDirectory = packetContentDirectory
+							 + File.separator + FilenameUtils.removeExtension(file.getName());
+					 new File(contentPacketsDirectory).mkdir();
+					 File fileBodyContent = parser.createFileFromBody(contentPacketsDirectory 
 							 + File.separator + id.toString());
 					 
 					 String dstAdress = tcp.getDestinationIP() + ":" + tcp.getDestinationPort();
@@ -100,6 +105,15 @@ public class PacketIntegrationService implements IntegrationService<ReportKey,Pa
 	public int clearLastReport(File file) {
 		int packetsDeleted = packetRepository.deleteByKeyFileName(file.getName()).size();
 		packetReportRepository.deleteByKeyFileName(file.getName());
+		try {
+			File dirContent = new File(packetContentDirectory + 
+					File.separator + FilenameUtils.removeExtension(file.getName()));
+			if(dirContent.exists()){
+					FileUtils.deleteDirectory(dirContent);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		return packetsDeleted;
 	}
 	
